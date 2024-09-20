@@ -1,0 +1,15 @@
+Log Entry: 2024-09-04 15:46:51
+Array
+(
+    [app] => live
+    [flashver] => FMLE/3.0 (compatible; Lavf60.16
+    [swfurl] => 
+    [tcurl] => rtmp://scatstreams.com:1935/live
+    [pageurl] => 
+    [addr] => 223.185.31.101
+    [clientid] => 1
+    [call] => publish
+    [name] => 23.Sb8sZIxW7FyCzYcA
+    [type] => live
+)
+

@@ -1,0 +1,9 @@
+vendor
+/vendor
+.idea
+.env
+node_module
+/storage/app/
+/storage/debugbar
+/storage/framework
+/storage/logs
