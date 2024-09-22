@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Head } from "@inertiajs/inertia-react";
 import Front from "@/Layouts/Front";
 import __ from "@/Functions/Translate";
@@ -16,6 +16,7 @@ export default function StartStream({
     streamUser,
     userFollowsChannel,
     userIsSubscribed,
+    isSubscribable
 }) {
     const [activeTab, setActiveTab] = useState("Videos");
 
@@ -100,6 +101,8 @@ export default function StartStream({
                     streamUser={streamUser}
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
+                    userIsSubscribed={userIsSubscribed}
+                    isSubscribable={isSubscribable}
                 />
             </div>
         </Front>

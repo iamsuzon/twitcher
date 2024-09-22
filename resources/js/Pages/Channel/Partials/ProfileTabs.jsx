@@ -3,29 +3,42 @@ import sanitizeHtml from "sanitize-html-react";
 import Tiers from "./TiersTab";
 import ScheduleTab from "./ScheduleTab";
 import ChannelVideos from "./ChannelVideos";
-import { FaGrinStars, FaHandSparkles } from "react-icons/fa";
-import { MdVideoLibrary } from "react-icons/md";
-import { usePage } from "@inertiajs/inertia-react";
-import { AiFillPlayCircle } from "react-icons/ai";
-import { Link } from "@inertiajs/inertia-react";
+import {FaGrinStars, FaHandSparkles} from "react-icons/fa";
+import {MdVideoLibrary} from "react-icons/md";
+import {usePage} from "@inertiajs/inertia-react";
+import {AiFillPlayCircle} from "react-icons/ai";
+import {Link} from "@inertiajs/inertia-react";
+import React, {useEffect} from "react";
+import SubscribableButtonModal from "@/Pages/Channel/Partials/SubscribableButtonModal";
 
-export default function ProfileTabs({ streamUser, activeTab, setActiveTab }) {
+export default function ProfileTabs({
+                                        streamUser,
+                                        activeTab,
+                                        setActiveTab,
+                                        userIsSubscribed,
+                                        isSubscribable,
+                                    }) {
     // active tab class
     const activeTabClass =
         "text-xl font-bold mr-2 md:mr-4 text-indigo-800 dark:text-indigo-500";
     const inactiveTabClass =
         "text-xl font-bold mr-2 md:mr-4 hover:text-indigo-800 dark:text-white dark:hover:text-indigo-500";
 
-    const { auth } = usePage().props;
+    const {auth} = usePage().props;
 
     const changeTab = (e, tabName) => {
         e.preventDefault();
         setActiveTab(tabName);
     };
 
+    useEffect(() => {
+        console.log(isSubscribable)
+    }, [isSubscribable]);
+
     return (
         <>
-            <div className="mt-4 bg-white dark:bg-zinc-900 rounded-lg shadow px-3 py-4 flex justify-between items-center flex-wrap">
+            <div
+                className="mt-4 bg-white dark:bg-zinc-900 rounded-lg shadow px-3 py-4 flex justify-between items-center flex-wrap">
                 <div>
                     <button
                         className={
@@ -79,22 +92,51 @@ export default function ProfileTabs({ streamUser, activeTab, setActiveTab }) {
                             })}
                             className="inline-flex items-center text-pink-600 hover:text-pink-500 dark:text-pink-500 dark:hover:text-pink-600 text-lg font-bold"
                         >
-                            <AiFillPlayCircle className="mr-1" />
+                            <AiFillPlayCircle className="mr-1"/>
                             {__("Start Streaming")}
                         </Link>
                     )}
-                    {auth.user?.username !== streamUser.username &&
-                        streamUser.live_status === "online" && (
-                            <Link
-                                href={route("channel.livestream", {
-                                    user: streamUser.username,
-                                })}
-                                className="inline-flex items-center text-pink-600 hover:text-pink-500 text-lg font-bold"
-                            >
-                                <AiFillPlayCircle className="mr-1" />
-                                {__("Watch Stream")}
-                            </Link>
-                        )}
+
+                    {
+                        auth.user?.username !== streamUser.username &&
+                        streamUser.live_status === "online"
+                            ?
+                            ! isSubscribable
+                                ?
+                                <Link
+                                    href={route("channel.livestream", {
+                                        user: streamUser.username,
+                                    })}
+                                    className="inline-flex items-center text-pink-600 hover:text-pink-500 text-lg font-bold"
+                                >
+                                    <AiFillPlayCircle className="mr-1"/>
+                                    {__("Watch Stream")}
+                                </Link>
+                                :
+                                <SubscribableButtonModal streamUser={streamUser}
+                                                         userIsSubscribed={userIsSubscribed}
+                                />
+                            :
+                            <></>
+                    }
+
+                    {/*{*/}
+                    {/*    isSubscribable*/}
+                    {/*        ?*/}
+                    {/*        <SubscribableButtonModal streamUser={streamUser}*/}
+                    {/*                                 userIsSubscribed={userIsSubscribed}*/}
+                    {/*        />*/}
+                    {/*        :*/}
+                    {/*        <Link*/}
+                    {/*            href={route("channel.livestream", {*/}
+                    {/*                user: streamUser.username,*/}
+                    {/*            })}*/}
+                    {/*            className="inline-flex items-center text-pink-600 hover:text-pink-500 text-lg font-bold"*/}
+                    {/*        >*/}
+                    {/*            <AiFillPlayCircle className="mr-1"/>*/}
+                    {/*            {__("Watch Stream")}*/}
+                    {/*        </Link>*/}
+                    {/*}*/}
                 </div>
             </div>
 
@@ -103,41 +145,42 @@ export default function ProfileTabs({ streamUser, activeTab, setActiveTab }) {
                 <>
                     <div className="flex mt-4">
                         <div className="flex flex-col items-center mr-4">
-                            <div className="shadow bg-white dark:bg-zinc-900 dark:text-white rounded-lg p-5 mb-5 w-full">
+                            <div
+                                className="shadow bg-white dark:bg-zinc-900 dark:text-white rounded-lg p-5 mb-5 w-full">
                                 <h3 className="text-2xl justify-center flex items-center dark:text-white  text-gray-600">
-                                    <FaHandSparkles className="w-10 h-10 mr-1" />
+                                    <FaHandSparkles className="w-10 h-10 mr-1"/>
                                 </h3>
                                 <p className="mt-2 font-medium text-center dark:text-white text-gray-600">
                                     {streamUser.followers_count === 1
                                         ? __("1 Followers")
                                         : __(":count Followers", {
-                                              count: streamUser.followers_count,
-                                          })}
+                                            count: streamUser.followers_count,
+                                        })}
                                 </p>
                             </div>
                             <div className="shadow bg-white dark:bg-zinc-900 rounded-lg p-5 mb-5 w-full">
                                 <h3 className="text-2xl justify-center flex items-center dark:text-white  text-gray-600">
-                                    <FaGrinStars className="w-10 h-10 mr-1" />
+                                    <FaGrinStars className="w-10 h-10 mr-1"/>
                                 </h3>
 
                                 <p className="mt-2 font-medium text-center dark:text-white text-gray-600">
                                     {streamUser.subscribers_count === 1
                                         ? __("1 Subscriber")
                                         : __(":count Subscribers", {
-                                              count: streamUser.subscribers_count,
-                                          })}
+                                            count: streamUser.subscribers_count,
+                                        })}
                                 </p>
                             </div>
                             <div className="shadow bg-white dark:bg-zinc-900 rounded-lg p-5 w-full">
                                 <h3 className="text-2xl justify-center flex items-center dark:text-white  text-gray-600">
-                                    <MdVideoLibrary className="w-10 h-10 mr-1" />
+                                    <MdVideoLibrary className="w-10 h-10 mr-1"/>
                                 </h3>
                                 <p className="mt-2 font-medium text-center dark:text-white text-gray-700">
                                     {streamUser.videos_count === 1
                                         ? __("1 Video")
                                         : __(":count Videos", {
-                                              count: streamUser.videos_count,
-                                          })}
+                                            count: streamUser.videos_count,
+                                        })}
                                 </p>
                             </div>
                         </div>
@@ -155,7 +198,8 @@ export default function ProfileTabs({ streamUser, activeTab, setActiveTab }) {
                                     }}
                                 />
                             ) : (
-                                <div className="bg-white dark:bg-zinc-900 dark:text-white rounded-lg shadow px-3 py-5 text-gray-600">
+                                <div
+                                    className="bg-white dark:bg-zinc-900 dark:text-white rounded-lg shadow px-3 py-5 text-gray-600">
                                     {__(
                                         "Add channel description in Channel Settings page."
                                     )}
@@ -167,13 +211,13 @@ export default function ProfileTabs({ streamUser, activeTab, setActiveTab }) {
             )}
 
             {/* Videos Tab */}
-            {activeTab == "Videos" && <ChannelVideos streamUser={streamUser} />}
+            {activeTab == "Videos" && <ChannelVideos streamUser={streamUser}/>}
 
             {/* Tiers Tab */}
-            {activeTab == "Tiers" && <Tiers user={streamUser} />}
+            {activeTab == "Tiers" && <Tiers user={streamUser}/>}
 
             {/* Schedule Tab */}
-            {activeTab == "Schedule" && <ScheduleTab user={streamUser} />}
+            {activeTab == "Schedule" && <ScheduleTab user={streamUser}/>}
         </>
     );
 }

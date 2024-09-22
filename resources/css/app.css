@@ -61,3 +61,8 @@ html {
 .static-page h3 {
     font-size: 130%;
 }
+
+/*Dev changes*/
+.watch-stream-sc {
+    cursor: pointer;
+}

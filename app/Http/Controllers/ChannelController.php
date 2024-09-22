@@ -6,6 +6,7 @@ use App\Events\LiveStreamBan;
 use App\Http\Requests\ChannelSettingsRequest;
 use App\Models\RoomBans;
 use App\Models\User;
+use App\Services\ValidateSubscriber;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
@@ -120,6 +121,15 @@ class ChannelController extends Controller
             $userIsSubscribed = true;
         }
 
+        // check if user is subscriptable
+        $isSubscribable = false;
+        if (auth()->check()) {
+            $isSubscribable = ValidateSubscriber::isSubscribable(
+                subscriber: $user,
+                streamer: $streamUser
+            );
+        }
+
         // build opengraph tags
         $ogTags = [
             'title' => __(":channelName's channel (:handle)", ['channelName' => $streamUser->name, 'handle' => '@' . $streamUser->username]),
@@ -127,7 +137,7 @@ class ChannelController extends Controller
             'image' => $streamUser->cover_picture
         ];
 
-        return Inertia::render('Channel/User', compact('user', 'isChannelOwner', 'streamUser', 'userFollowsChannel', 'userIsSubscribed', 'ogTags'));
+        return Inertia::render('Channel/User', compact('user', 'isChannelOwner', 'streamUser', 'userFollowsChannel', 'userIsSubscribed', 'ogTags', 'isSubscribable'));
     }
 
     // channel settings

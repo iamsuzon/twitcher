@@ -8,6 +8,7 @@ use App\Http\Controllers\BankTransferController;
 use App\Http\Controllers\BannedController;
 use App\Http\Controllers\BrowseChannelsController;
 use App\Http\Controllers\CCBillController;
+use App\Http\Middleware\ValidateSubscriber;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChannelController;
@@ -46,7 +47,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Live Streaming Controller
 Route::get('/channel/{user}', [ChannelController::class, 'userProfile'])->name('channel');
-Route::get('/channel/live-stream/{user}', [ChannelController::class, 'liveStream'])->name('channel.livestream');
+Route::get('/channel/live-stream/{user}', [ChannelController::class, 'liveStream'])->name('channel.livestream')->middleware(ValidateSubscriber::class);
 Route::get('/settings/channel', [ChannelController::class, 'channelSettings'])->name('channel.settings');
 Route::post('/settings/channel/update', [ChannelController::class, 'updateChannelSettings'])->name('channel.update-settings');
 Route::get('/channel/{user}/followers', [ChannelController::class, 'followers'])->name('channel.followers');

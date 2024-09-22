@@ -1,3 +1,5 @@
+node_modules
+/node_modules
 vendor
 /vendor
 .idea
@@ -6,4 +8,4 @@ node_module
 /storage/app/
 /storage/debugbar
 /storage/framework
-/storage/logs
+/storage/logs/storage/framework/sessions
